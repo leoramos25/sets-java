@@ -1,26 +1,34 @@
 package application;
 
-import services.PrintService;
+import entities.Product;
+import services.CalculationService;
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        PrintService<String> service = new PrintService<>();
+        Locale.setDefault(Locale.US);
+        final String FILE_PATH = "/home/leonardords/temp/in.csv";
 
-        System.out.print("How many values? ");
-        int values = scanner.nextInt();
+        final List<Product> products = new ArrayList<>();
 
-        for (int i = 0; i < values; i++) {
-            String value = scanner.next();
-            service.addValue(value);
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(FILE_PATH))) {
+            String line = bufferedReader.readLine();
+
+            while (line != null) {
+                String[] fields = line.split(",");
+                products.add(new Product(fields[0], Double.parseDouble(fields[1])));
+                line = bufferedReader.readLine();
+            }
+
+            System.out.printf("Most expensive: %s", CalculationService.max(products));
+        } catch (IOException exception) {
+            System.out.println(exception.getMessage());
         }
-
-        service.print();
-        String fistElement = service.first();
-        System.out.printf("First element: %s", fistElement);
-
-        scanner.close();
     }
 }
