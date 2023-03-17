@@ -1,6 +1,6 @@
 package application;
 
-public class Product {
+public class Product implements Comparable<Product> {
 
   private String name;
   private Double price;
@@ -24,5 +24,15 @@ public class Product {
 
   public void setPrice(Double price) {
     this.price = price;
+  }
+
+  @Override
+  public String toString() {
+    return String.format("Product [name: %s, price: %.2f]", this.name, this.price);
+  }
+
+  @Override
+  public int compareTo(Product product) {
+    return this.name.toUpperCase().compareTo(product.getName().toUpperCase());
   }
 }
