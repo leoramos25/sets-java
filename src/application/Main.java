@@ -1,41 +1,28 @@
 package application;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.time.Instant;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Main {
 
   public static void main(String[] args) {
-    Scanner sc = new Scanner(System.in);
+    Map<String, String> cookies = new TreeMap<>();
+    cookies.put("username", "maria");
+    cookies.put("email", "maria@gmail.com");
+    cookies.put("phone", "99771122");
 
-    System.out.print("Enter file full path: ");
-    String path = sc.nextLine();
+    cookies.remove("email");
 
-    try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-      Set<LogEntry> set = new HashSet<>();
+    cookies.put("phone", "99771133");
 
-      String line = br.readLine();
-      while (line != null) {
+    System.out.println("Contains 'phone' key: " + cookies.containsKey("phone"));
+    System.out.println("Phone number: " + cookies.get("phone"));
+    System.out.println("Email: " + cookies.get("email"));
+    System.out.println("Size: " + cookies.size());
 
-        String[] fields = line.split(" ");
-        String username = fields[0];
-        Date moment = Date.from(Instant.parse(fields[1]));
-
-        set.add(new LogEntry(username, moment));
-
-        line = br.readLine();
-      }
-      System.out.println("Total users: " + set.size());
-
-    } catch (IOException e) {
-      System.out.println("Error: " + e.getMessage());
+    System.out.println("ALL COOKIES:");
+    for (String key : cookies.keySet()) {
+      System.out.println(key + ": " + cookies.get(key));
     }
-    sc.close();
   }
 }
