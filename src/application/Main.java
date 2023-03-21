@@ -1,21 +1,50 @@
 package application;
 
-import java.util.HashMap;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
 
   public static void main(String[] args) {
-    Map<Product, Double> stock = new HashMap<>();
-    Product p1 = new Product("Tv", 900.0);
-    Product p2 = new Product("Notebook", 1200.0);
-    Product p3 = new Product("Tablet", 400.0);
+    Scanner sc = new Scanner(System.in);
 
-    stock.put(p1, 10000.0);
-    stock.put(p2, 20000.0);
-    stock.put(p3, 15000.0);
+    Map<String, Integer> votes = new LinkedHashMap<>();
 
-    Product ps = new Product("Tv", 900.0);
-    System.out.println("Contains 'ps' key: " + stock.containsKey(ps));
+    System.out.print("Enter file full path: ");
+    String path = sc.nextLine();
+
+    try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+
+      String line = br.readLine();
+      while (line != null) {
+
+        String[] fields = line.split(",");
+        String name = fields[0];
+        int count = Integer.parseInt(fields[1]);
+
+        if (votes.containsKey(name)) {
+          int votesSoFar = votes.get(name);
+          votes.put(name, count + votesSoFar);
+        } else {
+          votes.put(name, count);
+        }
+
+        line = br.readLine();
+      }
+
+      for (String key : votes.keySet()) {
+        System.out.println(key + ": " + votes.get(key));
+      }
+
+    } catch (IOException e) {
+      System.out.println("Error: " + e.getMessage());
+    }
+
+    sc.close();
   }
 }
